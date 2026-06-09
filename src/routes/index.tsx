@@ -7,13 +7,12 @@ import {
   Bookmark,
   X,
   Filter,
-  ChevronDown,
   Star,
   Globe,
   ArrowRight,
 } from "lucide-react";
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { nameData, type BabyName, origins } from "@/lib/baby-names";
 import {
   Sheet,
@@ -37,6 +36,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "NaamSutra - Baby Name Generator" },
+      {
+        name: "description",
+        content:
+          "Discover the perfect baby name. Explore 200+ curated names with meanings, origins, and save your favorites.",
+      },
+      { property: "og:title", content: "NaamSutra - Baby Name Generator" },
+      {
+        property: "og:description",
+        content:
+          "Find beautiful baby names from around the world. Filter by meaning, origin, gender, and more.",
+      },
+    ],
+  }),
+  component: BabyNameGenerator,
+});
 
 // --- Local Storage Hook ---
 function useFavorites() {
@@ -74,7 +93,17 @@ function useFavorites() {
 
 // --- Components ---
 
-function Navbar({ favCount }: { favCount: number }) {
+function Navbar({
+  favCount,
+  favoriteNames,
+  onToggleFavorite,
+  isFav,
+}: {
+  favCount: number;
+  favoriteNames: BabyName[];
+  onToggleFavorite: (id: string) => void;
+  isFav: (id: string) => boolean;
+}) {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
@@ -103,60 +132,51 @@ function Navbar({ favCount }: { favCount: number }) {
                 )}
               </Button>
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-md bg-background">
+            <SheetContent className="w-full bg-background sm:max-w-md">
               <SheetHeader>
-                <SheetTitle className="font-display text-2xl flex items-center gap-2">
+                <SheetTitle className="flex items-center gap-2 font-display text-2xl">
                   <Bookmark className="h-5 w-5 text-sage" />
                   Saved Names
                 </SheetTitle>
               </SheetHeader>
-              <FavoritesList />
+              <div className="mt-6 space-y-3">
+                {favoriteNames.length === 0 ? (
+                  <div className="mt-10 flex flex-col items-center justify-center text-center">
+                    <Heart className="h-12 w-12 text-muted-foreground/30" />
+                    <p className="mt-4 text-muted-foreground">
+                      No saved names yet. Start exploring and save your
+                      favorites!
+                    </p>
+                  </div>
+                ) : (
+                  favoriteNames.map((name) => (
+                    <div
+                      key={name.id}
+                      className="group flex items-center justify-between rounded-2xl border border-border/50 bg-card p-4 transition-all hover:shadow-md"
+                    >
+                      <div>
+                        <h4 className="font-display text-lg font-semibold text-foreground">
+                          {name.name}
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          {name.meaning} &middot; {name.origin}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => onToggleFavorite(name.id)}
+                        className="rounded-full p-2 text-rose transition-colors hover:bg-rose-light"
+                      >
+                        <Heart className="h-5 w-5 fill-rose" />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
             </SheetContent>
           </Sheet>
         </div>
       </div>
     </nav>
-  );
-}
-
-function FavoritesList() {
-  const { favoriteNames, toggle } = useFavorites();
-
-  if (favoriteNames.length === 0) {
-    return (
-      <div className="mt-10 flex flex-col items-center justify-center text-center">
-        <Heart className="h-12 w-12 text-muted-foreground/30" />
-        <p className="mt-4 text-muted-foreground">
-          No saved names yet. Start exploring and save your favorites!
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mt-6 space-y-3">
-      {favoriteNames.map((name) => (
-        <div
-          key={name.id}
-          className="group flex items-center justify-between rounded-2xl border border-border/50 bg-card p-4 transition-all hover:shadow-md"
-        >
-          <div>
-            <h4 className="font-display text-lg font-semibold text-foreground">
-              {name.name}
-            </h4>
-            <p className="text-sm text-muted-foreground">
-              {name.meaning} &middot; {name.origin}
-            </p>
-          </div>
-          <button
-            onClick={() => toggle(name.id)}
-            className="rounded-full p-2 text-rose transition-colors hover:bg-rose-light"
-          >
-            <Heart className="h-5 w-5 fill-rose" />
-          </button>
-        </div>
-      ))}
-    </div>
   );
 }
 
@@ -263,7 +283,7 @@ function NameCard({
           />
         </button>
       </div>
-      <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
         {name.meaning}
       </p>
       <div className="mt-4 flex items-center justify-between">
@@ -321,7 +341,7 @@ function NameDetailModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg bg-card">
+      <DialogContent className="bg-card sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-display text-3xl text-foreground">
             {name.name}
@@ -391,9 +411,7 @@ function NameDetailModal({
                 : "border-sage text-sage hover:bg-sage-light"
             }`}
           >
-            <Heart
-              className={`h-5 w-5 ${isFavorite ? "fill-rose" : ""}`}
-            />
+            <Heart className={`h-5 w-5 ${isFavorite ? "fill-rose" : ""}`} />
             {isFavorite ? "Remove from Saved" : "Save this Name"}
           </Button>
         </div>
@@ -428,7 +446,7 @@ function RandomNameModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md bg-card">
+      <DialogContent className="bg-card sm:max-w-md">
         <DialogHeader>
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sage-light">
             <Sparkles className="h-8 w-8 text-sage" />
@@ -464,9 +482,7 @@ function RandomNameModal({
                   : "border-sage text-sage hover:bg-sage-light"
               }`}
             >
-              <Heart
-                className={`h-4 w-4 ${isFavorite ? "fill-rose" : ""}`}
-              />
+              <Heart className={`h-4 w-4 ${isFavorite ? "fill-rose" : ""}`} />
               {isFavorite ? "Saved" : "Save"}
             </Button>
             <Button
@@ -485,7 +501,7 @@ function RandomNameModal({
 
 // --- Main Page ---
 
-export default function BabyNameGenerator() {
+function BabyNameGenerator() {
   const [gender, setGender] = useState<"all" | "boy" | "girl" | "unisex">(
     "all"
   );
@@ -513,7 +529,8 @@ export default function BabyNameGenerator() {
   }, [gender, origin, search]);
 
   const handleRandom = useCallback(() => {
-    const names = gender === "all" ? nameData : nameData.filter((n) => n.gender === gender);
+    const names =
+      gender === "all" ? nameData : nameData.filter((n) => n.gender === gender);
     const random = names[Math.floor(Math.random() * names.length)];
     setRandomName(random);
     setRandomOpen(true);
@@ -521,7 +538,12 @@ export default function BabyNameGenerator() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar favCount={favoriteNames.length} />
+      <Navbar
+        favCount={favoriteNames.length}
+        favoriteNames={favoriteNames}
+        onToggleFavorite={toggle}
+        isFav={isFav}
+      />
 
       <HeroSection onGenerate={handleRandom} />
 
@@ -530,9 +552,7 @@ export default function BabyNameGenerator() {
         <div className="rounded-3xl border border-border/50 bg-card p-6 shadow-sm">
           {/* Mobile filter toggle */}
           <div className="mb-4 flex items-center justify-between sm:hidden">
-            <h2 className="font-display text-xl font-semibold">
-              Filters
-            </h2>
+            <h2 className="font-display text-xl font-semibold">Filters</h2>
             <Button
               variant="ghost"
               size="sm"
@@ -583,7 +603,7 @@ export default function BabyNameGenerator() {
                   placeholder="Search by name, meaning, or tag..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="rounded-full border-border/50 pl-10 py-5"
+                  className="rounded-full border-border/50 py-5 pl-10"
                 />
               </div>
               <Select value={origin} onValueChange={setOrigin}>
@@ -680,9 +700,7 @@ export default function BabyNameGenerator() {
         isOpen={detailOpen}
         onClose={() => setDetailOpen(false)}
         isFavorite={selectedName ? isFav(selectedName.id) : false}
-        onToggleFavorite={() =>
-          selectedName && toggle(selectedName.id)
-        }
+        onToggleFavorite={() => selectedName && toggle(selectedName.id)}
       />
 
       <RandomNameModal
