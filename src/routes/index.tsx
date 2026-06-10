@@ -141,11 +141,11 @@ function Navbar({
               >
                 <Bookmark className="h-4 w-4" />
                 <span className="hidden sm:inline">Saved</span>
-                {favCount > 0 && (
+                {favCount > 0 ? (
                   <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose text-[10px] font-bold text-white">
                     {favCount}
                   </span>
-                )}
+                ) : null}
               </Button>
             </SheetTrigger>
             <SheetContent className="w-full bg-background sm:max-w-md">
