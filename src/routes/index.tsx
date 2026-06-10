@@ -14,6 +14,7 @@ import {
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { nameData, type BabyName, origins } from "@/lib/baby-names";
+import { SurpriseWizard, type GenName } from "@/components/SurpriseWizard";
 import {
   Sheet,
   SheetContent,
@@ -59,18 +60,25 @@ export const Route = createFileRoute("/")({
 
 // --- Local Storage Hook ---
 function useFavorites() {
-  const [favorites, setFavorites] = useState<string[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      return JSON.parse(localStorage.getItem("babyNameFavorites") || "[]");
-    } catch {
-      return [];
-    }
-  });
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [genFavorites, setGenFavorites] = useState<GenName[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("babyNameFavorites", JSON.stringify(favorites));
-  }, [favorites]);
+    try {
+      setFavorites(JSON.parse(localStorage.getItem("babyNameFavorites") || "[]"));
+      setGenFavorites(JSON.parse(localStorage.getItem("babyNameGenFavorites") || "[]"));
+    } catch {}
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (hydrated) localStorage.setItem("babyNameFavorites", JSON.stringify(favorites));
+  }, [favorites, hydrated]);
+
+  useEffect(() => {
+    if (hydrated) localStorage.setItem("babyNameGenFavorites", JSON.stringify(genFavorites));
+  }, [genFavorites, hydrated]);
 
   const toggle = useCallback((id: string) => {
     setFavorites((prev) =>
@@ -79,8 +87,8 @@ function useFavorites() {
   }, []);
 
   const isFav = useCallback(
-    (id: string) => favorites.includes(id),
-    [favorites]
+    (id: string) => favorites.includes(id) || genFavorites.some((g) => g.id === id),
+    [favorites, genFavorites]
   );
 
   const favoriteNames = useMemo(
@@ -88,7 +96,15 @@ function useFavorites() {
     [favorites]
   );
 
-  return { favorites, toggle, isFav, favoriteNames };
+  const toggleGen = useCallback((n: GenName) => {
+    setGenFavorites((prev) =>
+      prev.some((g) => g.id === n.id)
+        ? prev.filter((g) => g.id !== n.id)
+        : [...prev, n]
+    );
+  }, []);
+
+  return { favorites, toggle, isFav, favoriteNames, genFavorites, toggleGen, hydrated };
 }
 
 // --- Components ---
