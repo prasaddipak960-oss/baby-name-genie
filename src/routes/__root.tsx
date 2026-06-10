@@ -86,10 +86,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Discover the perfect baby name. Explore curated names with meanings, origins, and save your favorites." },
       { name: "author", content: "NaamSutra" },
       { property: "og:title", content: "NaamSutra - Baby Name Generator" },
-      { property: "og:description", content: "Find beautiful baby names from around the world." },
+      { property: "og:description", content: "Discover the perfect baby name. Explore curated names with meanings, origins, and save your favorites." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@NaamSutra" },
+      { name: "twitter:title", content: "NaamSutra - Baby Name Generator" },
+      { name: "twitter:description", content: "Discover the perfect baby name. Explore curated names with meanings, origins, and save your favorites." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/fa80f341-feb5-4eb5-b52f-679010ebcd20" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/fa80f341-feb5-4eb5-b52f-679010ebcd20" },
     ],
     links: [
       {
