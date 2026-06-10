@@ -227,8 +227,8 @@ function HeroSection({ onGenerate }: { onGenerate: () => void }) {
               size="lg"
               className="gap-2 rounded-full bg-sage px-8 py-6 text-lg font-semibold text-white shadow-lg shadow-sage/20 transition-all hover:bg-sage-dark hover:shadow-xl hover:shadow-sage/30"
             >
-              <Shuffle className="h-5 w-5" />
-              Surprise Me
+              <Sparkles className="h-5 w-5" />
+              Generate Magical Names
             </Button>
             <a
               href="#explorer"
