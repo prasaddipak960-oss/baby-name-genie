@@ -7,6 +7,10 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // Force Nitro during external production builds so Vercel receives the
+  // required Build Output API bundle in .vercel/output instead of a Vite-only
+  // static build that can deploy as 404: NOT_FOUND.
+  nitro: { preset: "vercel" },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
