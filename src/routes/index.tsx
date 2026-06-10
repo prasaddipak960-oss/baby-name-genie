@@ -14,6 +14,7 @@ import {
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { nameData, type BabyName, origins } from "@/lib/baby-names";
+import { SurpriseWizard, type GenName } from "@/components/SurpriseWizard";
 import {
   Sheet,
   SheetContent,
@@ -59,18 +60,25 @@ export const Route = createFileRoute("/")({
 
 // --- Local Storage Hook ---
 function useFavorites() {
-  const [favorites, setFavorites] = useState<string[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      return JSON.parse(localStorage.getItem("babyNameFavorites") || "[]");
-    } catch {
-      return [];
-    }
-  });
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [genFavorites, setGenFavorites] = useState<GenName[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("babyNameFavorites", JSON.stringify(favorites));
-  }, [favorites]);
+    try {
+      setFavorites(JSON.parse(localStorage.getItem("babyNameFavorites") || "[]"));
+      setGenFavorites(JSON.parse(localStorage.getItem("babyNameGenFavorites") || "[]"));
+    } catch {}
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (hydrated) localStorage.setItem("babyNameFavorites", JSON.stringify(favorites));
+  }, [favorites, hydrated]);
+
+  useEffect(() => {
+    if (hydrated) localStorage.setItem("babyNameGenFavorites", JSON.stringify(genFavorites));
+  }, [genFavorites, hydrated]);
 
   const toggle = useCallback((id: string) => {
     setFavorites((prev) =>
@@ -79,8 +87,8 @@ function useFavorites() {
   }, []);
 
   const isFav = useCallback(
-    (id: string) => favorites.includes(id),
-    [favorites]
+    (id: string) => favorites.includes(id) || genFavorites.some((g) => g.id === id),
+    [favorites, genFavorites]
   );
 
   const favoriteNames = useMemo(
@@ -88,7 +96,15 @@ function useFavorites() {
     [favorites]
   );
 
-  return { favorites, toggle, isFav, favoriteNames };
+  const toggleGen = useCallback((n: GenName) => {
+    setGenFavorites((prev) =>
+      prev.some((g) => g.id === n.id)
+        ? prev.filter((g) => g.id !== n.id)
+        : [...prev, n]
+    );
+  }, []);
+
+  return { favorites, toggle, isFav, favoriteNames, genFavorites, toggleGen, hydrated };
 }
 
 // --- Components ---
@@ -125,11 +141,11 @@ function Navbar({
               >
                 <Bookmark className="h-4 w-4" />
                 <span className="hidden sm:inline">Saved</span>
-                {favCount > 0 && (
+                {favCount > 0 ? (
                   <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose text-[10px] font-bold text-white">
                     {favCount}
                   </span>
-                )}
+                ) : null}
               </Button>
             </SheetTrigger>
             <SheetContent className="w-full bg-background sm:max-w-md">
@@ -211,8 +227,8 @@ function HeroSection({ onGenerate }: { onGenerate: () => void }) {
               size="lg"
               className="gap-2 rounded-full bg-sage px-8 py-6 text-lg font-semibold text-white shadow-lg shadow-sage/20 transition-all hover:bg-sage-dark hover:shadow-xl hover:shadow-sage/30"
             >
-              <Shuffle className="h-5 w-5" />
-              Surprise Me
+              <Sparkles className="h-5 w-5" />
+              Generate Magical Names
             </Button>
             <a
               href="#explorer"
@@ -512,8 +528,9 @@ function BabyNameGenerator() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [randomOpen, setRandomOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [wizardOpen, setWizardOpen] = useState(false);
 
-  const { isFav, toggle, favoriteNames } = useFavorites();
+  const { isFav, toggle, favoriteNames, toggleGen } = useFavorites();
 
   const filteredNames = useMemo(() => {
     return nameData.filter((n) => {
@@ -529,12 +546,14 @@ function BabyNameGenerator() {
   }, [gender, origin, search]);
 
   const handleRandom = useCallback(() => {
-    const names =
-      gender === "all" ? nameData : nameData.filter((n) => n.gender === gender);
-    const random = names[Math.floor(Math.random() * names.length)];
-    setRandomName(random);
-    setRandomOpen(true);
-  }, [gender]);
+    setWizardOpen(true);
+  }, []);
+
+  // Silence unused-warning for legacy state
+  void randomName;
+  void randomOpen;
+  void setRandomName;
+  void setRandomOpen;
 
   return (
     <div className="min-h-screen bg-background">
@@ -710,6 +729,13 @@ function BabyNameGenerator() {
         onNext={handleRandom}
         isFavorite={randomName ? isFav(randomName.id) : false}
         onToggleFavorite={() => randomName && toggle(randomName.id)}
+      />
+
+      <SurpriseWizard
+        open={wizardOpen}
+        onOpenChange={setWizardOpen}
+        onSaveName={toggleGen}
+        isSaved={isFav}
       />
     </div>
   );
