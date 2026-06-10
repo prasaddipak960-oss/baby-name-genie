@@ -528,8 +528,9 @@ function BabyNameGenerator() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [randomOpen, setRandomOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [wizardOpen, setWizardOpen] = useState(false);
 
-  const { isFav, toggle, favoriteNames } = useFavorites();
+  const { isFav, toggle, favoriteNames, toggleGen } = useFavorites();
 
   const filteredNames = useMemo(() => {
     return nameData.filter((n) => {
@@ -545,12 +546,14 @@ function BabyNameGenerator() {
   }, [gender, origin, search]);
 
   const handleRandom = useCallback(() => {
-    const names =
-      gender === "all" ? nameData : nameData.filter((n) => n.gender === gender);
-    const random = names[Math.floor(Math.random() * names.length)];
-    setRandomName(random);
-    setRandomOpen(true);
-  }, [gender]);
+    setWizardOpen(true);
+  }, []);
+
+  // Silence unused-warning for legacy state
+  void randomName;
+  void randomOpen;
+  void setRandomName;
+  void setRandomOpen;
 
   return (
     <div className="min-h-screen bg-background">
@@ -726,6 +729,13 @@ function BabyNameGenerator() {
         onNext={handleRandom}
         isFavorite={randomName ? isFav(randomName.id) : false}
         onToggleFavorite={() => randomName && toggle(randomName.id)}
+      />
+
+      <SurpriseWizard
+        open={wizardOpen}
+        onOpenChange={setWizardOpen}
+        onSaveName={toggleGen}
+        isSaved={isFav}
       />
     </div>
   );
