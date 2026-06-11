@@ -198,7 +198,7 @@ function Navbar({
 
 function HeroSection({ onGenerate }: { onGenerate: () => void }) {
   return (
-    <section className="relative overflow-hidden bg-cream">
+    <section className="relative overflow-hidden bg-gradient-to-b from-rose-light via-cream to-sky-light">
       <div className="absolute inset-0 opacity-40">
         <img
           src="/hero-baby.jpg"
@@ -206,12 +206,22 @@ function HeroSection({ onGenerate }: { onGenerate: () => void }) {
           className="h-full w-full object-cover"
         />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-cream/60 via-cream/80 to-background" />
+      <div className="absolute inset-0 bg-gradient-to-b from-cream/70 via-cream/80 to-background" />
+      {/* Cute floating baby-themed decorations */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <span className="absolute left-[6%] top-[18%] animate-bounce text-4xl [animation-duration:3s]">🍼</span>
+        <span className="absolute right-[8%] top-[22%] animate-bounce text-4xl [animation-duration:3.6s] [animation-delay:.4s]">🧸</span>
+        <span className="absolute left-[12%] bottom-[22%] animate-bounce text-3xl [animation-duration:4s] [animation-delay:.2s]">⭐</span>
+        <span className="absolute right-[14%] bottom-[28%] animate-bounce text-3xl [animation-duration:3.4s] [animation-delay:.6s]">☁️</span>
+        <span className="absolute left-[20%] top-[55%] text-2xl opacity-70">👣</span>
+        <span className="absolute right-[22%] top-[60%] text-2xl opacity-70">🌙</span>
+        <span className="absolute left-1/2 top-[8%] -translate-x-1/2 text-3xl animate-pulse">💕</span>
+      </div>
       <div className="relative mx-auto max-w-7xl px-4 py-16 sm:py-24 lg:py-32">
         <div className="mx-auto max-w-3xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-sage-light px-4 py-1.5 text-sm font-medium text-sage-dark">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-1.5 text-sm font-medium text-sage-dark shadow-sm backdrop-blur">
             <Sparkles className="h-4 w-4" />
-            Discover the perfect name for your little one
+            🍼 Discover the perfect name for your little one 🧸
           </div>
           <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
             Find a Name as{" "}
