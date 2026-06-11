@@ -608,12 +608,12 @@ function LabeledInput({
 }) {
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium">{label}</label>
+      <label className="mb-2 block text-sm font-medium">{label}</label>
       <Input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="rounded-full"
+        className="rounded-full py-5"
       />
     </div>
   );
