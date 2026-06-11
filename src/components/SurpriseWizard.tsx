@@ -281,15 +281,15 @@ export function SurpriseWizard({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto bg-card sm:max-w-2xl">
+      <DialogContent className="max-h-[92dvh] overflow-y-auto bg-card px-5 py-6 sm:px-6 sm:py-6 sm:max-w-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-sage-light">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sage-light">
               <Wand2 className="h-5 w-5 text-sage" />
             </div>
             <div>
-              <h2 className="font-display text-xl font-bold">Generate Magical Names</h2>
+              <h2 className="font-display text-lg sm:text-xl font-bold">Generate Magical Names</h2>
               <p className="text-xs text-muted-foreground">
                 Step {Math.min(step + 1, 4)} of 4
               </p>
