@@ -208,7 +208,7 @@ function HeroSection({ onGenerate }: { onGenerate: () => void }) {
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-cream/70 via-cream/80 to-background" />
       {/* Cute floating baby-themed decorations */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <span className="absolute left-[6%] top-[18%] animate-bounce text-4xl [animation-duration:3s]">🍼</span>
         <span className="absolute right-[8%] top-[22%] animate-bounce text-4xl [animation-duration:3.6s] [animation-delay:.4s]">🧸</span>
         <span className="absolute left-[12%] bottom-[22%] animate-bounce text-3xl [animation-duration:4s] [animation-delay:.2s]">⭐</span>
