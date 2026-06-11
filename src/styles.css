@@ -123,12 +123,32 @@
     font-family: var(--font-sans);
     font-size: 16.5px;
     letter-spacing: 0.005em;
+    line-height: 1.65;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     letter-spacing: -0.01em;
     font-variation-settings: "opsz" 96, "SOFT" 100;
+    line-height: 1.2;
+  }
+
+  p {
+    line-height: 1.75;
+  }
+
+  /* Mobile: even more generous line-height for tiny screens */
+  @media (max-width: 640px) {
+    body {
+      font-size: 17px;
+      line-height: 1.8;
+    }
+    p {
+      line-height: 1.85;
+    }
+    h1 { line-height: 1.15; }
+    h2 { line-height: 1.2; }
+    h3 { line-height: 1.25; }
   }
 
   /* Calmer, gentler animations site-wide */

@@ -281,15 +281,15 @@ export function SurpriseWizard({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto bg-card sm:max-w-2xl">
+      <DialogContent className="max-h-[92dvh] overflow-y-auto bg-card px-5 py-6 sm:px-6 sm:py-6 sm:max-w-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-sage-light">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sage-light">
               <Wand2 className="h-5 w-5 text-sage" />
             </div>
             <div>
-              <h2 className="font-display text-xl font-bold">Generate Magical Names</h2>
+              <h2 className="font-display text-lg sm:text-xl font-bold">Generate Magical Names</h2>
               <p className="text-xs text-muted-foreground">
                 Step {Math.min(step + 1, 4)} of 4
               </p>
@@ -311,9 +311,9 @@ export function SurpriseWizard({
 
         {/* Step 0: Parents */}
         {step === 0 && (
-          <div className="mt-4 space-y-4 animate-fade-in">
+          <div className="mt-6 space-y-5 animate-fade-in">
             <h3 className="font-display text-lg font-semibold">Parents' Details</h3>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <LabeledInput label="Father's Name" value={inputs.father}
                 onChange={(v) => upd("father", v)} placeholder="e.g. Rajesh" />
               <LabeledInput label="Mother's Name" value={inputs.mother}
@@ -325,13 +325,13 @@ export function SurpriseWizard({
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium">Gender</label>
-              <div className="flex gap-2">
+              <label className="mb-3 block text-sm font-medium">Gender</label>
+              <div className="flex gap-2.5">
                 {(["boy", "girl", "unisex"] as Gender[]).map((g) => (
                   <button
                     key={g}
                     onClick={() => upd("gender", g)}
-                    className={`flex-1 rounded-full px-4 py-2.5 text-sm font-semibold capitalize transition-all ${
+                    className={`flex-1 rounded-full px-4 py-3 text-sm font-semibold capitalize transition-all ${
                       inputs.gender === g
                         ? "bg-sage text-white shadow-md"
                         : "bg-secondary text-secondary-foreground hover:bg-muted"
@@ -343,10 +343,10 @@ export function SurpriseWizard({
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2">
+            <div className="flex justify-end gap-2 pt-3">
               <Button
                 onClick={() => setStep(1)}
-                className="gap-2 rounded-full bg-sage text-white hover:bg-sage-dark"
+                className="gap-2 rounded-full bg-sage text-white hover:bg-sage-dark py-5 px-6"
               >
                 Next <ArrowRight className="h-4 w-4" />
               </Button>
@@ -356,27 +356,27 @@ export function SurpriseWizard({
 
         {/* Step 1: Preferences */}
         {step === 1 && (
-          <div className="mt-4 space-y-5 animate-fade-in">
+          <div className="mt-6 space-y-6 animate-fade-in">
             <h3 className="font-display text-lg font-semibold">Style & Preferences</h3>
 
             <div>
-              <label className="mb-2 block text-sm font-medium">First Letter (optional)</label>
+              <label className="mb-3 block text-sm font-medium">First Letter (optional)</label>
               <Input
                 value={inputs.firstLetter}
                 onChange={(e) => upd("firstLetter", e.target.value.slice(0, 1).toUpperCase())}
                 placeholder="A, S, R…"
-                className="w-24 rounded-full text-center text-lg font-bold"
+                className="w-24 rounded-full text-center text-lg font-bold py-5"
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium">Name Style</label>
-              <div className="flex flex-wrap gap-2">
+              <label className="mb-3 block text-sm font-medium">Name Style</label>
+              <div className="flex flex-wrap gap-2.5">
                 {STYLES.map((s) => (
                   <button
                     key={s}
                     onClick={() => upd("style", s)}
-                    className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                    className={`rounded-full px-4 py-2.5 text-sm font-medium transition-all ${
                       inputs.style === s
                         ? "bg-sage text-white"
                         : "bg-secondary text-secondary-foreground hover:bg-muted"
@@ -389,13 +389,13 @@ export function SurpriseWizard({
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium">Meaning Theme</label>
-              <div className="flex flex-wrap gap-2">
+              <label className="mb-3 block text-sm font-medium">Meaning Theme</label>
+              <div className="flex flex-wrap gap-2.5">
                 {MEANINGS.map((m) => (
                   <button
                     key={m}
                     onClick={() => upd("meaning", m)}
-                    className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                    className={`rounded-full px-4 py-2.5 text-sm font-medium transition-all ${
                       inputs.meaning === m
                         ? "bg-rose text-white"
                         : "bg-secondary text-secondary-foreground hover:bg-muted"
@@ -407,15 +407,15 @@ export function SurpriseWizard({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div>
-                <label className="mb-2 block text-sm font-medium">Length</label>
-                <div className="flex flex-wrap gap-2">
+                <label className="mb-3 block text-sm font-medium">Length</label>
+                <div className="flex flex-wrap gap-2.5">
                   {(["any", "short", "medium", "long"] as Length[]).map((l) => (
                     <button
                       key={l}
                       onClick={() => upd("length", l)}
-                      className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-all ${
+                      className={`rounded-full px-3.5 py-2 text-xs font-medium capitalize transition-all ${
                         inputs.length === l
                           ? "bg-sage text-white"
                           : "bg-secondary hover:bg-muted"
@@ -427,13 +427,13 @@ export function SurpriseWizard({
                 </div>
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium">Rarity</label>
-                <div className="flex flex-wrap gap-2">
+                <label className="mb-3 block text-sm font-medium">Rarity</label>
+                <div className="flex flex-wrap gap-2.5">
                   {(["any", "common", "rare", "ultra"] as Rarity[]).map((r) => (
                     <button
                       key={r}
                       onClick={() => upd("rarity", r)}
-                      className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-all ${
+                      className={`rounded-full px-3.5 py-2 text-xs font-medium capitalize transition-all ${
                         inputs.rarity === r
                           ? "bg-sage text-white"
                           : "bg-secondary hover:bg-muted"
@@ -446,17 +446,17 @@ export function SurpriseWizard({
               </div>
             </div>
 
-            <div className="flex justify-between gap-2 pt-2">
+            <div className="flex justify-between gap-2 pt-3">
               <Button
                 variant="outline"
                 onClick={() => setStep(0)}
-                className="gap-2 rounded-full"
+                className="gap-2 rounded-full py-5 px-5"
               >
                 <ArrowLeft className="h-4 w-4" /> Back
               </Button>
               <Button
                 onClick={() => setStep(2)}
-                className="gap-2 rounded-full bg-sage text-white hover:bg-sage-dark"
+                className="gap-2 rounded-full bg-sage text-white hover:bg-sage-dark py-5 px-5"
               >
                 <Sparkles className="h-4 w-4" />
                 Generate Magical Names
@@ -497,13 +497,13 @@ export function SurpriseWizard({
 
         {/* Step 3: Results */}
         {step === 3 && (
-          <div className="mt-4 animate-fade-in">
-            <div className="mb-4 flex items-center justify-between">
+          <div className="mt-6 animate-fade-in">
+            <div className="mb-5 flex items-center justify-between gap-3">
               <div>
                 <h3 className="font-display text-lg font-semibold">
                   {results.length} Magical Names
                 </h3>
-                <p className="text-xs text-muted-foreground capitalize">
+                <p className="text-xs text-muted-foreground capitalize leading-relaxed">
                   {inputs.gender === "unisex" ? "Neutral" : inputs.gender} •{" "}
                   {inputs.style} • {inputs.nationality || "Mixed"}
                 </p>
@@ -512,36 +512,36 @@ export function SurpriseWizard({
                 variant="outline"
                 size="sm"
                 onClick={regenerate}
-                className="gap-2 rounded-full"
+                className="gap-2 rounded-full shrink-0"
               >
                 <RefreshCw className="h-3.5 w-3.5" /> Regenerate
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {results.map((n, idx) => (
                 <div
                   key={n.id}
-                  className="group rounded-2xl border border-border/50 bg-background p-4 transition-all hover:shadow-md"
+                  className="group rounded-2xl border border-border/50 bg-background p-5 transition-all hover:shadow-md"
                 >
-                  <div className="flex items-start justify-between">
-                    <div>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
                       <div className="flex items-baseline gap-2">
-                        <span className="text-xs font-bold text-muted-foreground">
+                        <span className="text-xs font-bold text-muted-foreground shrink-0">
                           {idx + 1}.
                         </span>
-                        <h4 className="font-display text-2xl font-bold text-foreground">
+                        <h4 className="font-display text-2xl font-bold text-foreground truncate">
                           {n.name}
                         </h4>
                       </div>
-                      <p className="mt-0.5 text-xs italic text-muted-foreground">
+                      <p className="mt-1 text-xs italic text-muted-foreground">
                         /{n.pronunciation}/
                       </p>
                     </div>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 shrink-0">
                       <button
                         onClick={() => copy(n)}
-                        className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                        className="rounded-full p-2.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                         title="Copy"
                       >
                         {copiedId === n.id ? (
@@ -552,7 +552,7 @@ export function SurpriseWizard({
                       </button>
                       <button
                         onClick={() => onSaveName(n)}
-                        className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-rose-light hover:text-rose"
+                        className="rounded-full p-2.5 text-muted-foreground transition-colors hover:bg-rose-light hover:text-rose"
                         title="Save"
                       >
                         <Heart
@@ -563,9 +563,9 @@ export function SurpriseWizard({
                       </button>
                     </div>
                   </div>
-                  <p className="mt-2 text-sm text-foreground">{n.meaning}</p>
-                  <div className="mt-3 flex items-center justify-between text-xs">
-                    <span className="rounded-full bg-secondary px-2.5 py-1 font-medium text-secondary-foreground">
+                  <p className="mt-3 text-sm leading-relaxed text-foreground">{n.meaning}</p>
+                  <div className="mt-4 flex items-center justify-between text-xs">
+                    <span className="rounded-full bg-secondary px-3 py-1 font-medium text-secondary-foreground">
                       {n.origin}
                     </span>
                     <div className="flex items-center gap-1.5">
@@ -579,17 +579,17 @@ export function SurpriseWizard({
               ))}
             </div>
 
-            <div className="mt-6 flex justify-between gap-2">
+            <div className="mt-8 flex justify-between gap-2">
               <Button
                 variant="outline"
                 onClick={() => setStep(1)}
-                className="gap-2 rounded-full"
+                className="gap-2 rounded-full py-5 px-5"
               >
                 <ArrowLeft className="h-4 w-4" /> Edit Preferences
               </Button>
               <Button
                 onClick={() => onOpenChange(false)}
-                className="gap-2 rounded-full bg-sage text-white hover:bg-sage-dark"
+                className="gap-2 rounded-full bg-sage text-white hover:bg-sage-dark py-5 px-5"
               >
                 <X className="h-4 w-4" /> Close
               </Button>
@@ -608,12 +608,12 @@ function LabeledInput({
 }) {
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium">{label}</label>
+      <label className="mb-2 block text-sm font-medium">{label}</label>
       <Input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="rounded-full"
+        className="rounded-full py-5"
       />
     </div>
   );

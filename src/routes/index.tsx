@@ -208,7 +208,7 @@ function HeroSection({ onGenerate }: { onGenerate: () => void }) {
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-cream/70 via-cream/80 to-background" />
       {/* Cute floating baby-themed decorations */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <span className="absolute left-[6%] top-[18%] animate-bounce text-4xl [animation-duration:3s]">🍼</span>
         <span className="absolute right-[8%] top-[22%] animate-bounce text-4xl [animation-duration:3.6s] [animation-delay:.4s]">🧸</span>
         <span className="absolute left-[12%] bottom-[22%] animate-bounce text-3xl [animation-duration:4s] [animation-delay:.2s]">⭐</span>
@@ -217,17 +217,17 @@ function HeroSection({ onGenerate }: { onGenerate: () => void }) {
         <span className="absolute right-[22%] top-[60%] text-2xl opacity-70">🌙</span>
         <span className="absolute left-1/2 top-[8%] -translate-x-1/2 text-3xl animate-pulse">💕</span>
       </div>
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:py-24 lg:py-32">
+      <div className="relative mx-auto max-w-7xl px-5 py-20 sm:py-24 lg:py-32">
         <div className="mx-auto max-w-3xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-1.5 text-sm font-medium text-sage-dark shadow-sm backdrop-blur">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-medium text-sage-dark shadow-sm backdrop-blur">
             <Sparkles className="h-4 w-4" />
             🍼 Discover the perfect name for your little one 🧸
           </div>
-          <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <h1 className="font-display text-[2.25rem] font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl leading-tight">
             Find a Name as{" "}
             <span className="text-sage">Beautiful</span> as Your Baby
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
+          <p className="mx-auto mt-6 max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
             Explore 200+ curated baby names from around the world. Filter by
             meaning, origin, gender, and save your favorites.
           </p>
@@ -235,14 +235,14 @@ function HeroSection({ onGenerate }: { onGenerate: () => void }) {
             <Button
               onClick={onGenerate}
               size="lg"
-              className="gap-2 rounded-full bg-sage px-8 py-6 text-lg font-semibold text-white shadow-lg shadow-sage/20 transition-all hover:bg-sage-dark hover:shadow-xl hover:shadow-sage/30"
+              className="gap-2 rounded-full bg-sage px-8 py-7 text-lg font-semibold text-white shadow-lg shadow-sage/20 transition-all hover:bg-sage-dark hover:shadow-xl hover:shadow-sage/30 w-full sm:w-auto"
             >
               <Sparkles className="h-5 w-5" />
               Generate Magical Names
             </Button>
             <a
               href="#explorer"
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-8 py-3 text-lg font-medium text-foreground shadow-sm transition-all hover:bg-secondary"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-white px-8 py-4 text-lg font-medium text-foreground shadow-sm transition-all hover:bg-secondary w-full sm:w-auto"
             >
               Explore Names
               <ArrowRight className="h-5 w-5" />
@@ -284,12 +284,12 @@ function NameCard({
   return (
     <div
       onClick={onClick}
-      className="group relative cursor-pointer rounded-2xl border border-border/50 bg-card p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+      className="group relative cursor-pointer rounded-2xl border border-border/50 bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg sm:p-5"
     >
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">{genderIcon}</span>
-          <h3 className="font-display text-2xl font-bold text-foreground">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="text-xl shrink-0">{genderIcon}</span>
+          <h3 className="font-display text-2xl font-bold text-foreground truncate">
             {name.name}
           </h3>
         </div>
@@ -298,7 +298,7 @@ function NameCard({
             e.stopPropagation();
             onToggleFavorite();
           }}
-          className="rounded-full p-2 transition-colors hover:bg-secondary"
+          className="shrink-0 rounded-full p-2.5 transition-colors hover:bg-secondary"
         >
           <Heart
             className={`h-5 w-5 transition-colors ${
@@ -309,14 +309,14 @@ function NameCard({
           />
         </button>
       </div>
-      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+      <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
         {name.meaning}
       </p>
-      <div className="mt-4 flex items-center justify-between">
+      <div className="mt-5 flex items-center justify-between">
         <span
-          className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium ${genderColor}`}
+          className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium ${genderColor}`}
         >
-          <Globe className="h-3 w-3" />
+          <Globe className="h-3.5 w-3.5" />
           {name.origin}
         </span>
         <div className="flex items-center gap-1">
@@ -577,25 +577,26 @@ function BabyNameGenerator() {
       <HeroSection onGenerate={handleRandom} />
 
       {/* Filter Section */}
-      <section id="explorer" className="mx-auto max-w-7xl px-4 py-8">
-        <div className="rounded-3xl border border-border/50 bg-card p-6 shadow-sm">
+      <section id="explorer" className="mx-auto max-w-7xl px-5 py-10 sm:px-4 sm:py-8">
+        <div className="rounded-3xl border border-border/50 bg-card p-6 sm:p-6 shadow-sm">
           {/* Mobile filter toggle */}
-          <div className="mb-4 flex items-center justify-between sm:hidden">
+          <div className="mb-5 flex items-center justify-between sm:hidden">
             <h2 className="font-display text-xl font-semibold">Filters</h2>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setShowFilters(!showFilters)}
+              className="h-10 px-3"
             >
               <Filter className="h-4 w-4" />
             </Button>
           </div>
 
           <div
-            className={`space-y-4 ${showFilters ? "block" : "hidden sm:block"}`}
+            className={`space-y-5 ${showFilters ? "block" : "hidden sm:block"}`}
           >
             {/* Gender Tabs */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2.5">
               {(
                 [
                   ["all", "All Names"],
@@ -607,7 +608,7 @@ function BabyNameGenerator() {
                 <button
                   key={g}
                   onClick={() => setGender(g)}
-                  className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${
+                  className={`rounded-full px-5 py-3 text-sm font-semibold transition-all ${
                     gender === g
                       ? g === "boy"
                         ? "bg-sky text-white shadow-md shadow-sky/20"
@@ -625,18 +626,18 @@ function BabyNameGenerator() {
             </div>
 
             {/* Search & Origin */}
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-4 sm:flex-row">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search by name, meaning, or tag..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="rounded-full border-border/50 py-5 pl-10"
+                  className="rounded-full border-border/50 py-6 pl-11 text-base"
                 />
               </div>
               <Select value={origin} onValueChange={setOrigin}>
-                <SelectTrigger className="w-full rounded-full border-border/50 py-5 sm:w-[200px]">
+                <SelectTrigger className="w-full rounded-full border-border/50 py-6 text-base sm:w-[200px]">
                   <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
                   <SelectValue placeholder="Origin" />
                 </SelectTrigger>
@@ -651,7 +652,7 @@ function BabyNameGenerator() {
             </div>
           </div>
 
-          <div className="mt-4 text-sm text-muted-foreground">
+          <div className="mt-5 text-sm text-muted-foreground">
             Showing{" "}
             <span className="font-semibold text-foreground">
               {filteredNames.length}
@@ -662,9 +663,9 @@ function BabyNameGenerator() {
       </section>
 
       {/* Results Grid */}
-      <section className="mx-auto max-w-7xl px-4 pb-20">
+      <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-4">
         {filteredNames.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-4">
             {filteredNames.map((name) => (
               <NameCard
                 key={name.id}
@@ -679,12 +680,12 @@ function BabyNameGenerator() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="flex flex-col items-center justify-center py-24 text-center">
             <Search className="h-16 w-16 text-muted-foreground/20" />
-            <h3 className="mt-6 font-display text-2xl font-semibold text-foreground">
+            <h3 className="mt-8 font-display text-2xl font-semibold text-foreground">
               No names found
             </h3>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mt-3 max-w-xs text-muted-foreground leading-relaxed">
               Try adjusting your filters or search terms
             </p>
             <Button
@@ -694,7 +695,7 @@ function BabyNameGenerator() {
                 setSearch("");
               }}
               variant="outline"
-              className="mt-6 rounded-full"
+              className="mt-8 rounded-full py-5 px-6"
             >
               <X className="mr-2 h-4 w-4" />
               Clear Filters
@@ -704,18 +705,18 @@ function BabyNameGenerator() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/50 bg-card py-12">
-        <div className="mx-auto max-w-7xl px-4 text-center">
+      <footer className="border-t border-border/50 bg-card py-14">
+        <div className="mx-auto max-w-7xl px-5 text-center sm:px-4">
           <div className="flex items-center justify-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sage text-white">
               <Baby className="h-4 w-4" />
             </div>
             <span className="font-display text-xl font-bold">NaamSutra</span>
           </div>
-          <p className="mt-4 text-sm text-muted-foreground">
+          <p className="mt-5 max-w-sm mx-auto text-sm text-muted-foreground leading-relaxed">
             Helping parents find the perfect name for their little miracle.
           </p>
-          <p className="mt-6 text-xs text-muted-foreground/60">
+          <p className="mt-8 text-xs text-muted-foreground/60">
             &copy; {new Date().getFullYear()} NaamSutra. Made with{" "}
             <Heart className="inline h-3 w-3 fill-rose text-rose" /> for
             families everywhere.
