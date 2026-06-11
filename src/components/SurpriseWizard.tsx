@@ -311,9 +311,9 @@ export function SurpriseWizard({
 
         {/* Step 0: Parents */}
         {step === 0 && (
-          <div className="mt-4 space-y-4 animate-fade-in">
+          <div className="mt-6 space-y-5 animate-fade-in">
             <h3 className="font-display text-lg font-semibold">Parents' Details</h3>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <LabeledInput label="Father's Name" value={inputs.father}
                 onChange={(v) => upd("father", v)} placeholder="e.g. Rajesh" />
               <LabeledInput label="Mother's Name" value={inputs.mother}
@@ -325,13 +325,13 @@ export function SurpriseWizard({
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium">Gender</label>
-              <div className="flex gap-2">
+              <label className="mb-3 block text-sm font-medium">Gender</label>
+              <div className="flex gap-2.5">
                 {(["boy", "girl", "unisex"] as Gender[]).map((g) => (
                   <button
                     key={g}
                     onClick={() => upd("gender", g)}
-                    className={`flex-1 rounded-full px-4 py-2.5 text-sm font-semibold capitalize transition-all ${
+                    className={`flex-1 rounded-full px-4 py-3 text-sm font-semibold capitalize transition-all ${
                       inputs.gender === g
                         ? "bg-sage text-white shadow-md"
                         : "bg-secondary text-secondary-foreground hover:bg-muted"
@@ -343,10 +343,10 @@ export function SurpriseWizard({
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2">
+            <div className="flex justify-end gap-2 pt-3">
               <Button
                 onClick={() => setStep(1)}
-                className="gap-2 rounded-full bg-sage text-white hover:bg-sage-dark"
+                className="gap-2 rounded-full bg-sage text-white hover:bg-sage-dark py-5 px-6"
               >
                 Next <ArrowRight className="h-4 w-4" />
               </Button>
