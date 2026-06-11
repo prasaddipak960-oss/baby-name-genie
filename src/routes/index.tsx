@@ -663,9 +663,9 @@ function BabyNameGenerator() {
       </section>
 
       {/* Results Grid */}
-      <section className="mx-auto max-w-7xl px-4 pb-20">
+      <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-4">
         {filteredNames.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-4">
             {filteredNames.map((name) => (
               <NameCard
                 key={name.id}
@@ -680,12 +680,12 @@ function BabyNameGenerator() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="flex flex-col items-center justify-center py-24 text-center">
             <Search className="h-16 w-16 text-muted-foreground/20" />
-            <h3 className="mt-6 font-display text-2xl font-semibold text-foreground">
+            <h3 className="mt-8 font-display text-2xl font-semibold text-foreground">
               No names found
             </h3>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mt-3 max-w-xs text-muted-foreground leading-relaxed">
               Try adjusting your filters or search terms
             </p>
             <Button
@@ -695,7 +695,7 @@ function BabyNameGenerator() {
                 setSearch("");
               }}
               variant="outline"
-              className="mt-6 rounded-full"
+              className="mt-8 rounded-full py-5 px-6"
             >
               <X className="mr-2 h-4 w-4" />
               Clear Filters
@@ -705,18 +705,18 @@ function BabyNameGenerator() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/50 bg-card py-12">
-        <div className="mx-auto max-w-7xl px-4 text-center">
+      <footer className="border-t border-border/50 bg-card py-14">
+        <div className="mx-auto max-w-7xl px-5 text-center sm:px-4">
           <div className="flex items-center justify-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sage text-white">
               <Baby className="h-4 w-4" />
             </div>
             <span className="font-display text-xl font-bold">NaamSutra</span>
           </div>
-          <p className="mt-4 text-sm text-muted-foreground">
+          <p className="mt-5 max-w-sm mx-auto text-sm text-muted-foreground leading-relaxed">
             Helping parents find the perfect name for their little miracle.
           </p>
-          <p className="mt-6 text-xs text-muted-foreground/60">
+          <p className="mt-8 text-xs text-muted-foreground/60">
             &copy; {new Date().getFullYear()} NaamSutra. Made with{" "}
             <Heart className="inline h-3 w-3 fill-rose text-rose" /> for
             families everywhere.
