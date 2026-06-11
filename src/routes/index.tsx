@@ -217,17 +217,17 @@ function HeroSection({ onGenerate }: { onGenerate: () => void }) {
         <span className="absolute right-[22%] top-[60%] text-2xl opacity-70">🌙</span>
         <span className="absolute left-1/2 top-[8%] -translate-x-1/2 text-3xl animate-pulse">💕</span>
       </div>
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:py-24 lg:py-32">
+      <div className="relative mx-auto max-w-7xl px-5 py-20 sm:py-24 lg:py-32">
         <div className="mx-auto max-w-3xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-1.5 text-sm font-medium text-sage-dark shadow-sm backdrop-blur">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-medium text-sage-dark shadow-sm backdrop-blur">
             <Sparkles className="h-4 w-4" />
             🍼 Discover the perfect name for your little one 🧸
           </div>
-          <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <h1 className="font-display text-[2.25rem] font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl leading-tight">
             Find a Name as{" "}
             <span className="text-sage">Beautiful</span> as Your Baby
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
+          <p className="mx-auto mt-6 max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
             Explore 200+ curated baby names from around the world. Filter by
             meaning, origin, gender, and save your favorites.
           </p>
@@ -235,14 +235,14 @@ function HeroSection({ onGenerate }: { onGenerate: () => void }) {
             <Button
               onClick={onGenerate}
               size="lg"
-              className="gap-2 rounded-full bg-sage px-8 py-6 text-lg font-semibold text-white shadow-lg shadow-sage/20 transition-all hover:bg-sage-dark hover:shadow-xl hover:shadow-sage/30"
+              className="gap-2 rounded-full bg-sage px-8 py-7 text-lg font-semibold text-white shadow-lg shadow-sage/20 transition-all hover:bg-sage-dark hover:shadow-xl hover:shadow-sage/30 w-full sm:w-auto"
             >
               <Sparkles className="h-5 w-5" />
               Generate Magical Names
             </Button>
             <a
               href="#explorer"
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-8 py-3 text-lg font-medium text-foreground shadow-sm transition-all hover:bg-secondary"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-white px-8 py-4 text-lg font-medium text-foreground shadow-sm transition-all hover:bg-secondary w-full sm:w-auto"
             >
               Explore Names
               <ArrowRight className="h-5 w-5" />
@@ -284,12 +284,12 @@ function NameCard({
   return (
     <div
       onClick={onClick}
-      className="group relative cursor-pointer rounded-2xl border border-border/50 bg-card p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+      className="group relative cursor-pointer rounded-2xl border border-border/50 bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg sm:p-5"
     >
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">{genderIcon}</span>
-          <h3 className="font-display text-2xl font-bold text-foreground">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="text-xl shrink-0">{genderIcon}</span>
+          <h3 className="font-display text-2xl font-bold text-foreground truncate">
             {name.name}
           </h3>
         </div>
@@ -298,7 +298,7 @@ function NameCard({
             e.stopPropagation();
             onToggleFavorite();
           }}
-          className="rounded-full p-2 transition-colors hover:bg-secondary"
+          className="shrink-0 rounded-full p-2.5 transition-colors hover:bg-secondary"
         >
           <Heart
             className={`h-5 w-5 transition-colors ${
@@ -309,14 +309,14 @@ function NameCard({
           />
         </button>
       </div>
-      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+      <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
         {name.meaning}
       </p>
-      <div className="mt-4 flex items-center justify-between">
+      <div className="mt-5 flex items-center justify-between">
         <span
-          className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium ${genderColor}`}
+          className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium ${genderColor}`}
         >
-          <Globe className="h-3 w-3" />
+          <Globe className="h-3.5 w-3.5" />
           {name.origin}
         </span>
         <div className="flex items-center gap-1">
