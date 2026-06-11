@@ -577,25 +577,26 @@ function BabyNameGenerator() {
       <HeroSection onGenerate={handleRandom} />
 
       {/* Filter Section */}
-      <section id="explorer" className="mx-auto max-w-7xl px-4 py-8">
-        <div className="rounded-3xl border border-border/50 bg-card p-6 shadow-sm">
+      <section id="explorer" className="mx-auto max-w-7xl px-5 py-10 sm:px-4 sm:py-8">
+        <div className="rounded-3xl border border-border/50 bg-card p-6 sm:p-6 shadow-sm">
           {/* Mobile filter toggle */}
-          <div className="mb-4 flex items-center justify-between sm:hidden">
+          <div className="mb-5 flex items-center justify-between sm:hidden">
             <h2 className="font-display text-xl font-semibold">Filters</h2>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setShowFilters(!showFilters)}
+              className="h-10 px-3"
             >
               <Filter className="h-4 w-4" />
             </Button>
           </div>
 
           <div
-            className={`space-y-4 ${showFilters ? "block" : "hidden sm:block"}`}
+            className={`space-y-5 ${showFilters ? "block" : "hidden sm:block"}`}
           >
             {/* Gender Tabs */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2.5">
               {(
                 [
                   ["all", "All Names"],
@@ -607,7 +608,7 @@ function BabyNameGenerator() {
                 <button
                   key={g}
                   onClick={() => setGender(g)}
-                  className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${
+                  className={`rounded-full px-5 py-3 text-sm font-semibold transition-all ${
                     gender === g
                       ? g === "boy"
                         ? "bg-sky text-white shadow-md shadow-sky/20"
@@ -625,18 +626,18 @@ function BabyNameGenerator() {
             </div>
 
             {/* Search & Origin */}
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-4 sm:flex-row">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search by name, meaning, or tag..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="rounded-full border-border/50 py-5 pl-10"
+                  className="rounded-full border-border/50 py-6 pl-11 text-base"
                 />
               </div>
               <Select value={origin} onValueChange={setOrigin}>
-                <SelectTrigger className="w-full rounded-full border-border/50 py-5 sm:w-[200px]">
+                <SelectTrigger className="w-full rounded-full border-border/50 py-6 text-base sm:w-[200px]">
                   <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
                   <SelectValue placeholder="Origin" />
                 </SelectTrigger>
@@ -651,7 +652,7 @@ function BabyNameGenerator() {
             </div>
           </div>
 
-          <div className="mt-4 text-sm text-muted-foreground">
+          <div className="mt-5 text-sm text-muted-foreground">
             Showing{" "}
             <span className="font-semibold text-foreground">
               {filteredNames.length}
