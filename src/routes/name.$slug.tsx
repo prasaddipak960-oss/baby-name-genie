@@ -1,19 +1,21 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
-import { z } from "zod";
 import { ArrowLeft, Globe, Heart, Copy, Check, Share2, Sparkles } from "lucide-react";
 import { nameData, type BabyName } from "@/lib/baby-names";
 import { Button } from "@/components/ui/button";
 
-const searchSchema = z.object({
-  n: fallback(z.string(), "").default(""),
-  m: fallback(z.string(), "").default(""),
-  o: fallback(z.string(), "").default(""),
-  g: fallback(z.string(), "").default(""),
-  p: fallback(z.number(), 0).default(0),
-  pr: fallback(z.string(), "").default(""),
-});
+type NameSearch = {
+  n: string;
+  m: string;
+  o: string;
+  g: string;
+  p: number;
+  pr: string;
+};
+
+function str(v: unknown) {
+  return typeof v === "string" ? v : "";
+}
 
 export function slugifyName(name: string, id: string) {
   return `${name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${id}`;
@@ -28,7 +30,14 @@ function findBySlug(slug: string): BabyName | null {
 }
 
 export const Route = createFileRoute("/name/$slug")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (search: Record<string, unknown>): NameSearch => ({
+    n: str(search.n),
+    m: str(search.m),
+    o: str(search.o),
+    g: str(search.g),
+    p: Number(search.p) || 0,
+    pr: str(search.pr),
+  }),
   head: ({ params }) => {
     const found = findBySlug(params.slug);
     const label = found
