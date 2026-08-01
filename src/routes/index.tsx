@@ -399,6 +399,7 @@ function NameDetailModal({
   isFavorite: boolean;
   onToggleFavorite: () => void;
 }) {
+  const [copied, setCopied] = useState(false);
   if (!name) return null;
 
   const genderLabel =
@@ -478,18 +479,46 @@ function NameDetailModal({
             </div>
           </div>
 
-          <Button
-            onClick={onToggleFavorite}
-            variant="outline"
-            className={`w-full gap-2 rounded-full py-6 text-lg font-semibold ${
-              isFavorite
-                ? "border-rose text-rose hover:bg-rose-light"
-                : "border-sage text-sage hover:bg-sage-light"
-            }`}
-          >
-            <Heart className={`h-5 w-5 ${isFavorite ? "fill-rose" : ""}`} />
-            {isFavorite ? "Remove from Saved" : "Save this Name"}
-          </Button>
+          <div className="space-y-3">
+            <Button
+              onClick={onToggleFavorite}
+              variant="outline"
+              className={`w-full gap-2 rounded-full py-6 text-lg font-semibold ${
+                isFavorite
+                  ? "border-rose text-rose hover:bg-rose-light"
+                  : "border-sage text-sage hover:bg-sage-light"
+              }`}
+            >
+              <Heart className={`h-5 w-5 ${isFavorite ? "fill-rose" : ""}`} />
+              {isFavorite ? "Remove from Saved" : "Save this Name"}
+            </Button>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1 gap-2 rounded-full"
+                onClick={() => {
+                  navigator.clipboard?.writeText(`${name.name} — ${name.meaning}`);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 1400);
+                }}
+              >
+                {copied ? <Check className="h-4 w-4 text-sage" /> : <Copy className="h-4 w-4" />}
+                {copied ? "Copied" : "Copy"}
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1 gap-2 rounded-full"
+                onClick={() => {
+                  const text = `${name.name} — ${name.meaning} (${name.origin})`;
+                  if (navigator.share) navigator.share({ title: name.name, text }).catch(() => {});
+                  else navigator.clipboard?.writeText(text);
+                }}
+              >
+                <Share2 className="h-4 w-4" />
+                Share
+              </Button>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
