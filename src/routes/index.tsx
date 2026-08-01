@@ -10,11 +10,17 @@ import {
   Star,
   Globe,
   ArrowRight,
+  Copy,
+  Check,
+  Share2,
+  HelpCircle,
+  CalendarHeart,
 } from "lucide-react";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { nameData, type BabyName, origins } from "@/lib/baby-names";
 import { SurpriseWizard, type GenName } from "@/components/SurpriseWizard";
+import { OnboardingIntro } from "@/components/OnboardingIntro";
 import {
   Sheet,
   SheetContent,
