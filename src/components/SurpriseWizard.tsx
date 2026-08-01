@@ -15,6 +15,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { nameData, type BabyName } from "@/lib/baby-names";
+import { generatedShareUrl } from "@/lib/share-links";
 
 type Gender = "boy" | "girl" | "unisex";
 type Length = "any" | "short" | "medium" | "long";
@@ -237,6 +238,7 @@ export function SurpriseWizard({
   const [results, setResults] = useState<GenName[]>([]);
   const [analyzeIdx, setAnalyzeIdx] = useState(0);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [linkedId, setLinkedId] = useState<string | null>(null);
 
   // reset when closing
   useEffect(() => {
@@ -277,6 +279,12 @@ export function SurpriseWizard({
     navigator.clipboard?.writeText(`${n.name} — ${n.meaning}`);
     setCopiedId(n.id);
     setTimeout(() => setCopiedId(null), 1400);
+  };
+
+  const copyLink = (n: GenName) => {
+    navigator.clipboard?.writeText(generatedShareUrl(n));
+    setLinkedId(n.id);
+    setTimeout(() => setLinkedId(null), 1600);
   };
 
   return (
@@ -564,6 +572,20 @@ export function SurpriseWizard({
                     </div>
                   </div>
                   <p className="mt-2 text-sm text-foreground">{n.meaning}</p>
+                  <button
+                    onClick={() => copyLink(n)}
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-muted"
+                  >
+                    {linkedId === n.id ? (
+                      <>
+                        <Check className="h-3.5 w-3.5 text-sage" /> Link copied!
+                      </>
+                    ) : (
+                      <>
+                        <Share2 className="h-3.5 w-3.5" /> Copy shareable link
+                      </>
+                    )}
+                  </button>
                   <div className="mt-3 flex items-center justify-between text-xs">
                     <span className="rounded-full bg-secondary px-2.5 py-1 font-medium text-secondary-foreground">
                       {n.origin}
