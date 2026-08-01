@@ -10,11 +10,17 @@ import {
   Star,
   Globe,
   ArrowRight,
+  Copy,
+  Check,
+  Share2,
+  HelpCircle,
+  CalendarHeart,
 } from "lucide-react";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { nameData, type BabyName, origins } from "@/lib/baby-names";
 import { SurpriseWizard, type GenName } from "@/components/SurpriseWizard";
+import { OnboardingIntro } from "@/components/OnboardingIntro";
 import {
   Sheet,
   SheetContent,
@@ -114,12 +120,19 @@ function Navbar({
   favoriteNames,
   onToggleFavorite,
   isFav,
+  genFavorites,
+  onRemoveGen,
+  onReplayIntro,
 }: {
   favCount: number;
   favoriteNames: BabyName[];
   onToggleFavorite: (id: string) => void;
   isFav: (id: string) => boolean;
+  genFavorites: GenName[];
+  onRemoveGen: (n: GenName) => void;
+  onReplayIntro: () => void;
 }) {
+  void isFav;
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
@@ -132,6 +145,15 @@ function Navbar({
           </span>
         </Link>
         <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onReplayIntro}
+            className="hidden gap-2 rounded-full text-muted-foreground hover:text-foreground sm:inline-flex"
+          >
+            <HelpCircle className="h-4 w-4" />
+            How it works
+          </Button>
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -148,7 +170,7 @@ function Navbar({
                 ) : null}
               </Button>
             </SheetTrigger>
-            <SheetContent className="w-full bg-background sm:max-w-md">
+            <SheetContent className="w-full overflow-y-auto bg-background sm:max-w-md">
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2 font-display text-2xl">
                   <Bookmark className="h-5 w-5 text-sage" />
@@ -156,7 +178,7 @@ function Navbar({
                 </SheetTitle>
               </SheetHeader>
               <div className="mt-6 space-y-3">
-                {favoriteNames.length === 0 ? (
+                {favoriteNames.length === 0 && genFavorites.length === 0 ? (
                   <div className="mt-10 flex flex-col items-center justify-center text-center">
                     <Heart className="h-12 w-12 text-muted-foreground/30" />
                     <p className="mt-4 text-muted-foreground">
@@ -165,7 +187,8 @@ function Navbar({
                     </p>
                   </div>
                 ) : (
-                  favoriteNames.map((name) => (
+                  <>
+                  {favoriteNames.map((name) => (
                     <div
                       key={name.id}
                       className="group flex items-center justify-between rounded-2xl border border-border/50 bg-card p-4 transition-all hover:shadow-md"
@@ -185,7 +208,32 @@ function Navbar({
                         <Heart className="h-5 w-5 fill-rose" />
                       </button>
                     </div>
-                  ))
+                  ))}
+                  {genFavorites.map((n) => (
+                    <div
+                      key={n.id}
+                      className="flex items-center justify-between rounded-2xl border border-sage/30 bg-sage-light/40 p-4"
+                    >
+                      <div>
+                        <h4 className="font-display text-lg font-semibold text-foreground">
+                          {n.name}
+                          <span className="ml-2 rounded-full bg-sage px-2 py-0.5 text-[10px] font-bold uppercase text-white">
+                            AI
+                          </span>
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          {n.meaning} &middot; {n.origin}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => onRemoveGen(n)}
+                        className="rounded-full p-2 text-rose transition-colors hover:bg-rose-light"
+                      >
+                        <Heart className="h-5 w-5 fill-rose" />
+                      </button>
+                    </div>
+                  ))}
+                  </>
                 )}
               </div>
             </SheetContent>
@@ -203,6 +251,8 @@ function HeroSection({ onGenerate }: { onGenerate: () => void }) {
         <img
           src="/hero-baby.jpg"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover"
         />
       </div>
@@ -349,6 +399,7 @@ function NameDetailModal({
   isFavorite: boolean;
   onToggleFavorite: () => void;
 }) {
+  const [copied, setCopied] = useState(false);
   if (!name) return null;
 
   const genderLabel =
@@ -428,18 +479,46 @@ function NameDetailModal({
             </div>
           </div>
 
-          <Button
-            onClick={onToggleFavorite}
-            variant="outline"
-            className={`w-full gap-2 rounded-full py-6 text-lg font-semibold ${
-              isFavorite
-                ? "border-rose text-rose hover:bg-rose-light"
-                : "border-sage text-sage hover:bg-sage-light"
-            }`}
-          >
-            <Heart className={`h-5 w-5 ${isFavorite ? "fill-rose" : ""}`} />
-            {isFavorite ? "Remove from Saved" : "Save this Name"}
-          </Button>
+          <div className="space-y-3">
+            <Button
+              onClick={onToggleFavorite}
+              variant="outline"
+              className={`w-full gap-2 rounded-full py-6 text-lg font-semibold ${
+                isFavorite
+                  ? "border-rose text-rose hover:bg-rose-light"
+                  : "border-sage text-sage hover:bg-sage-light"
+              }`}
+            >
+              <Heart className={`h-5 w-5 ${isFavorite ? "fill-rose" : ""}`} />
+              {isFavorite ? "Remove from Saved" : "Save this Name"}
+            </Button>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1 gap-2 rounded-full"
+                onClick={() => {
+                  navigator.clipboard?.writeText(`${name.name} — ${name.meaning}`);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 1400);
+                }}
+              >
+                {copied ? <Check className="h-4 w-4 text-sage" /> : <Copy className="h-4 w-4" />}
+                {copied ? "Copied" : "Copy"}
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1 gap-2 rounded-full"
+                onClick={() => {
+                  const text = `${name.name} — ${name.meaning} (${name.origin})`;
+                  if (navigator.share) navigator.share({ title: name.name, text }).catch(() => {});
+                  else navigator.clipboard?.writeText(text);
+                }}
+              >
+                <Share2 className="h-4 w-4" />
+                Share
+              </Button>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
@@ -539,25 +618,65 @@ function BabyNameGenerator() {
   const [randomOpen, setRandomOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [sort, setSort] = useState<"popular" | "az" | "za" | "short">("popular");
+  const [letter, setLetter] = useState<string>("");
+  const [visible, setVisible] = useState(24);
+  const [introOpen, setIntroOpen] = useState(false);
 
-  const { isFav, toggle, favoriteNames, toggleGen } = useFavorites();
+  const { isFav, toggle, favoriteNames, toggleGen, genFavorites, hydrated } =
+    useFavorites();
+
+  // First-visit onboarding
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!localStorage.getItem("naamsutra_intro_seen")) {
+      setIntroOpen(true);
+      localStorage.setItem("naamsutra_intro_seen", "1");
+    }
+  }, [hydrated]);
 
   const filteredNames = useMemo(() => {
-    return nameData.filter((n) => {
+    const list = nameData.filter((n) => {
       const genderMatch = gender === "all" || n.gender === gender;
       const originMatch = origin === "All" || n.origin === origin;
+      const letterMatch =
+        !letter || n.name.toLowerCase().startsWith(letter.toLowerCase());
       const searchMatch =
         !search ||
         n.name.toLowerCase().includes(search.toLowerCase()) ||
         n.meaning.toLowerCase().includes(search.toLowerCase()) ||
         n.tags.some((t) => t.toLowerCase().includes(search.toLowerCase()));
-      return genderMatch && originMatch && searchMatch;
+      return genderMatch && originMatch && searchMatch && letterMatch;
     });
-  }, [gender, origin, search]);
+    const sorted = [...list];
+    if (sort === "popular") sorted.sort((a, b) => b.popularity - a.popularity);
+    if (sort === "az") sorted.sort((a, b) => a.name.localeCompare(b.name));
+    if (sort === "za") sorted.sort((a, b) => b.name.localeCompare(a.name));
+    if (sort === "short") sorted.sort((a, b) => a.name.length - b.name.length);
+    return sorted;
+  }, [gender, origin, search, letter, sort]);
+
+  // Reset pagination whenever filters change (keeps rendering fast)
+  useEffect(() => {
+    setVisible(24);
+  }, [gender, origin, search, letter, sort]);
+
+  // Name of the day — stable per calendar day
+  const nameOfDay = useMemo(() => {
+    const day = Math.floor(Date.now() / 86400000);
+    return nameData[day % nameData.length];
+  }, []);
 
   const handleRandom = useCallback(() => {
     setWizardOpen(true);
   }, []);
+
+  const surpriseOne = useCallback(() => {
+    const pool = filteredNames.length ? filteredNames : nameData;
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    setSelectedName(pick);
+    setDetailOpen(true);
+  }, [filteredNames]);
 
   // Silence unused-warning for legacy state
   void randomName;
@@ -572,9 +691,50 @@ function BabyNameGenerator() {
         favoriteNames={favoriteNames}
         onToggleFavorite={toggle}
         isFav={isFav}
+        genFavorites={genFavorites}
+        onRemoveGen={toggleGen}
+        onReplayIntro={() => setIntroOpen(true)}
       />
 
       <HeroSection onGenerate={handleRandom} />
+
+      {/* Name of the Day */}
+      <section className="mx-auto max-w-7xl px-4 pt-8">
+        <div className="flex flex-col items-center justify-between gap-4 rounded-3xl border border-sage/25 bg-sage-light/40 p-6 sm:flex-row">
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/70 text-2xl">
+              <CalendarHeart className="h-6 w-6 text-sage" />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-sage-dark">
+                Name of the Day
+              </p>
+              <h3 className="font-display text-2xl font-bold">{nameOfDay.name}</h3>
+              <p className="text-sm text-muted-foreground">
+                {nameOfDay.meaning} &middot; {nameOfDay.origin}
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="rounded-full"
+              onClick={() => {
+                setSelectedName(nameOfDay);
+                setDetailOpen(true);
+              }}
+            >
+              View details
+            </Button>
+            <Button
+              onClick={surpriseOne}
+              className="gap-2 rounded-full bg-sage text-white hover:bg-sage-dark"
+            >
+              <Shuffle className="h-4 w-4" /> Surprise me
+            </Button>
+          </div>
+        </div>
+      </section>
 
       {/* Filter Section */}
       <section id="explorer" className="mx-auto max-w-7xl px-4 py-8">
@@ -648,6 +808,40 @@ function BabyNameGenerator() {
                   ))}
                 </SelectContent>
               </Select>
+              <Select value={sort} onValueChange={(v) => setSort(v as typeof sort)}>
+                <SelectTrigger className="w-full rounded-full border-border/50 py-5 sm:w-[170px]">
+                  <SelectValue placeholder="Sort" />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl">
+                  <SelectItem value="popular">Most popular</SelectItem>
+                  <SelectItem value="az">A → Z</SelectItem>
+                  <SelectItem value="za">Z → A</SelectItem>
+                  <SelectItem value="short">Shortest first</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* A-Z quick picker */}
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                onClick={() => setLetter("")}
+                className={`rounded-full px-3 py-1 text-xs font-semibold transition-all ${
+                  letter === "" ? "bg-foreground text-background" : "bg-secondary hover:bg-muted"
+                }`}
+              >
+                All
+              </button>
+              {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((ch) => (
+                <button
+                  key={ch}
+                  onClick={() => setLetter(letter === ch ? "" : ch)}
+                  className={`h-7 w-7 rounded-full text-xs font-semibold transition-all ${
+                    letter === ch ? "bg-sage text-white" : "bg-secondary hover:bg-muted"
+                  }`}
+                >
+                  {ch}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -665,7 +859,7 @@ function BabyNameGenerator() {
       <section className="mx-auto max-w-7xl px-4 pb-20">
         {filteredNames.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredNames.map((name) => (
+            {filteredNames.slice(0, visible).map((name) => (
               <NameCard
                 key={name.id}
                 name={name}
@@ -702,6 +896,18 @@ function BabyNameGenerator() {
           </div>
         )}
       </section>
+      {filteredNames.length > visible && (
+        <div className="mx-auto flex max-w-7xl justify-center px-4 pb-16">
+          <Button
+            variant="outline"
+            size="lg"
+            className="rounded-full"
+            onClick={() => setVisible((v) => v + 24)}
+          >
+            Load more names ({filteredNames.length - visible} left)
+          </Button>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-border/50 bg-card py-12">
@@ -746,6 +952,15 @@ function BabyNameGenerator() {
         onOpenChange={setWizardOpen}
         onSaveName={toggleGen}
         isSaved={isFav}
+      />
+
+      <OnboardingIntro
+        open={introOpen}
+        onOpenChange={setIntroOpen}
+        onPick={(g) => {
+          setGender(g);
+          document.getElementById("explorer")?.scrollIntoView({ behavior: "smooth" });
+        }}
       />
     </div>
   );
