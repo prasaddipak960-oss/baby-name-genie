@@ -779,6 +779,40 @@ function BabyNameGenerator() {
                   ))}
                 </SelectContent>
               </Select>
+              <Select value={sort} onValueChange={(v) => setSort(v as typeof sort)}>
+                <SelectTrigger className="w-full rounded-full border-border/50 py-5 sm:w-[170px]">
+                  <SelectValue placeholder="Sort" />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl">
+                  <SelectItem value="popular">Most popular</SelectItem>
+                  <SelectItem value="az">A → Z</SelectItem>
+                  <SelectItem value="za">Z → A</SelectItem>
+                  <SelectItem value="short">Shortest first</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* A-Z quick picker */}
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                onClick={() => setLetter("")}
+                className={`rounded-full px-3 py-1 text-xs font-semibold transition-all ${
+                  letter === "" ? "bg-foreground text-background" : "bg-secondary hover:bg-muted"
+                }`}
+              >
+                All
+              </button>
+              {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((ch) => (
+                <button
+                  key={ch}
+                  onClick={() => setLetter(letter === ch ? "" : ch)}
+                  className={`h-7 w-7 rounded-full text-xs font-semibold transition-all ${
+                    letter === ch ? "bg-sage text-white" : "bg-secondary hover:bg-muted"
+                  }`}
+                >
+                  {ch}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -796,7 +830,7 @@ function BabyNameGenerator() {
       <section className="mx-auto max-w-7xl px-4 pb-20">
         {filteredNames.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredNames.map((name) => (
+            {filteredNames.slice(0, visible).map((name) => (
               <NameCard
                 key={name.id}
                 name={name}
@@ -833,6 +867,18 @@ function BabyNameGenerator() {
           </div>
         )}
       </section>
+      {filteredNames.length > visible && (
+        <div className="mx-auto flex max-w-7xl justify-center px-4 pb-16">
+          <Button
+            variant="outline"
+            size="lg"
+            className="rounded-full"
+            onClick={() => setVisible((v) => v + 24)}
+          >
+            Load more names ({filteredNames.length - visible} left)
+          </Button>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-border/50 bg-card py-12">
@@ -877,6 +923,15 @@ function BabyNameGenerator() {
         onOpenChange={setWizardOpen}
         onSaveName={toggleGen}
         isSaved={isFav}
+      />
+
+      <OnboardingIntro
+        open={introOpen}
+        onOpenChange={setIntroOpen}
+        onPick={(g) => {
+          setGender(g);
+          document.getElementById("explorer")?.scrollIntoView({ behavior: "smooth" });
+        }}
       />
     </div>
   );
