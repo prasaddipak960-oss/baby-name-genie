@@ -251,6 +251,8 @@ function HeroSection({ onGenerate }: { onGenerate: () => void }) {
         <img
           src="/hero-baby.jpg"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover"
         />
       </div>
