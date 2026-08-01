@@ -19,6 +19,7 @@ import {
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { nameData, type BabyName, origins } from "@/lib/baby-names";
+import { curatedShareUrl, generatedShareUrl } from "@/lib/share-links";
 import { SurpriseWizard, type GenName } from "@/components/SurpriseWizard";
 import { OnboardingIntro } from "@/components/OnboardingIntro";
 import {
@@ -400,6 +401,7 @@ function NameDetailModal({
   onToggleFavorite: () => void;
 }) {
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   if (!name) return null;
 
   const genderLabel =
@@ -509,15 +511,35 @@ function NameDetailModal({
                 variant="outline"
                 className="flex-1 gap-2 rounded-full"
                 onClick={() => {
+                  const url = curatedShareUrl(name);
                   const text = `${name.name} — ${name.meaning} (${name.origin})`;
-                  if (navigator.share) navigator.share({ title: name.name, text }).catch(() => {});
-                  else navigator.clipboard?.writeText(text);
+                  if (navigator.share) navigator.share({ title: name.name, text, url }).catch(() => {});
+                  else navigator.clipboard?.writeText(`${text} ${url}`);
                 }}
               >
                 <Share2 className="h-4 w-4" />
                 Share
               </Button>
             </div>
+            <Button
+              variant="outline"
+              className="w-full gap-2 rounded-full"
+              onClick={() => {
+                navigator.clipboard?.writeText(curatedShareUrl(name));
+                setLinkCopied(true);
+                setTimeout(() => setLinkCopied(false), 1600);
+              }}
+            >
+              {linkCopied ? <Check className="h-4 w-4 text-sage" /> : <Share2 className="h-4 w-4" />}
+              {linkCopied ? "Link copied!" : "Copy shareable link"}
+            </Button>
+            <Link
+              to="/name/$slug"
+              params={{ slug: `${name.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${name.id}` }}
+              className="block text-center text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+            >
+              Open shareable page
+            </Link>
           </div>
         </div>
       </DialogContent>
