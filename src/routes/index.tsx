@@ -589,25 +589,65 @@ function BabyNameGenerator() {
   const [randomOpen, setRandomOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [sort, setSort] = useState<"popular" | "az" | "za" | "short">("popular");
+  const [letter, setLetter] = useState<string>("");
+  const [visible, setVisible] = useState(24);
+  const [introOpen, setIntroOpen] = useState(false);
 
-  const { isFav, toggle, favoriteNames, toggleGen } = useFavorites();
+  const { isFav, toggle, favoriteNames, toggleGen, genFavorites, hydrated } =
+    useFavorites();
+
+  // First-visit onboarding
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!localStorage.getItem("naamsutra_intro_seen")) {
+      setIntroOpen(true);
+      localStorage.setItem("naamsutra_intro_seen", "1");
+    }
+  }, [hydrated]);
 
   const filteredNames = useMemo(() => {
-    return nameData.filter((n) => {
+    const list = nameData.filter((n) => {
       const genderMatch = gender === "all" || n.gender === gender;
       const originMatch = origin === "All" || n.origin === origin;
+      const letterMatch =
+        !letter || n.name.toLowerCase().startsWith(letter.toLowerCase());
       const searchMatch =
         !search ||
         n.name.toLowerCase().includes(search.toLowerCase()) ||
         n.meaning.toLowerCase().includes(search.toLowerCase()) ||
         n.tags.some((t) => t.toLowerCase().includes(search.toLowerCase()));
-      return genderMatch && originMatch && searchMatch;
+      return genderMatch && originMatch && searchMatch && letterMatch;
     });
-  }, [gender, origin, search]);
+    const sorted = [...list];
+    if (sort === "popular") sorted.sort((a, b) => b.popularity - a.popularity);
+    if (sort === "az") sorted.sort((a, b) => a.name.localeCompare(b.name));
+    if (sort === "za") sorted.sort((a, b) => b.name.localeCompare(a.name));
+    if (sort === "short") sorted.sort((a, b) => a.name.length - b.name.length);
+    return sorted;
+  }, [gender, origin, search, letter, sort]);
+
+  // Reset pagination whenever filters change (keeps rendering fast)
+  useEffect(() => {
+    setVisible(24);
+  }, [gender, origin, search, letter, sort]);
+
+  // Name of the day — stable per calendar day
+  const nameOfDay = useMemo(() => {
+    const day = Math.floor(Date.now() / 86400000);
+    return nameData[day % nameData.length];
+  }, []);
 
   const handleRandom = useCallback(() => {
     setWizardOpen(true);
   }, []);
+
+  const surpriseOne = useCallback(() => {
+    const pool = filteredNames.length ? filteredNames : nameData;
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    setSelectedName(pick);
+    setDetailOpen(true);
+  }, [filteredNames]);
 
   // Silence unused-warning for legacy state
   void randomName;
@@ -622,9 +662,50 @@ function BabyNameGenerator() {
         favoriteNames={favoriteNames}
         onToggleFavorite={toggle}
         isFav={isFav}
+        genFavorites={genFavorites}
+        onRemoveGen={toggleGen}
+        onReplayIntro={() => setIntroOpen(true)}
       />
 
       <HeroSection onGenerate={handleRandom} />
+
+      {/* Name of the Day */}
+      <section className="mx-auto max-w-7xl px-4 pt-8">
+        <div className="flex flex-col items-center justify-between gap-4 rounded-3xl border border-sage/25 bg-sage-light/40 p-6 sm:flex-row">
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/70 text-2xl">
+              <CalendarHeart className="h-6 w-6 text-sage" />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-sage-dark">
+                Name of the Day
+              </p>
+              <h3 className="font-display text-2xl font-bold">{nameOfDay.name}</h3>
+              <p className="text-sm text-muted-foreground">
+                {nameOfDay.meaning} &middot; {nameOfDay.origin}
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="rounded-full"
+              onClick={() => {
+                setSelectedName(nameOfDay);
+                setDetailOpen(true);
+              }}
+            >
+              View details
+            </Button>
+            <Button
+              onClick={surpriseOne}
+              className="gap-2 rounded-full bg-sage text-white hover:bg-sage-dark"
+            >
+              <Shuffle className="h-4 w-4" /> Surprise me
+            </Button>
+          </div>
+        </div>
+      </section>
 
       {/* Filter Section */}
       <section id="explorer" className="mx-auto max-w-7xl px-4 py-8">
