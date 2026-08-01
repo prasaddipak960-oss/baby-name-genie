@@ -120,12 +120,19 @@ function Navbar({
   favoriteNames,
   onToggleFavorite,
   isFav,
+  genFavorites,
+  onRemoveGen,
+  onReplayIntro,
 }: {
   favCount: number;
   favoriteNames: BabyName[];
   onToggleFavorite: (id: string) => void;
   isFav: (id: string) => boolean;
+  genFavorites: GenName[];
+  onRemoveGen: (n: GenName) => void;
+  onReplayIntro: () => void;
 }) {
+  void isFav;
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
@@ -138,6 +145,15 @@ function Navbar({
           </span>
         </Link>
         <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onReplayIntro}
+            className="hidden gap-2 rounded-full text-muted-foreground hover:text-foreground sm:inline-flex"
+          >
+            <HelpCircle className="h-4 w-4" />
+            How it works
+          </Button>
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -154,7 +170,7 @@ function Navbar({
                 ) : null}
               </Button>
             </SheetTrigger>
-            <SheetContent className="w-full bg-background sm:max-w-md">
+            <SheetContent className="w-full overflow-y-auto bg-background sm:max-w-md">
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2 font-display text-2xl">
                   <Bookmark className="h-5 w-5 text-sage" />
@@ -162,7 +178,7 @@ function Navbar({
                 </SheetTitle>
               </SheetHeader>
               <div className="mt-6 space-y-3">
-                {favoriteNames.length === 0 ? (
+                {favoriteNames.length === 0 && genFavorites.length === 0 ? (
                   <div className="mt-10 flex flex-col items-center justify-center text-center">
                     <Heart className="h-12 w-12 text-muted-foreground/30" />
                     <p className="mt-4 text-muted-foreground">
@@ -171,7 +187,8 @@ function Navbar({
                     </p>
                   </div>
                 ) : (
-                  favoriteNames.map((name) => (
+                  <>
+                  {favoriteNames.map((name) => (
                     <div
                       key={name.id}
                       className="group flex items-center justify-between rounded-2xl border border-border/50 bg-card p-4 transition-all hover:shadow-md"
@@ -191,7 +208,32 @@ function Navbar({
                         <Heart className="h-5 w-5 fill-rose" />
                       </button>
                     </div>
-                  ))
+                  ))}
+                  {genFavorites.map((n) => (
+                    <div
+                      key={n.id}
+                      className="flex items-center justify-between rounded-2xl border border-sage/30 bg-sage-light/40 p-4"
+                    >
+                      <div>
+                        <h4 className="font-display text-lg font-semibold text-foreground">
+                          {n.name}
+                          <span className="ml-2 rounded-full bg-sage px-2 py-0.5 text-[10px] font-bold uppercase text-white">
+                            AI
+                          </span>
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          {n.meaning} &middot; {n.origin}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => onRemoveGen(n)}
+                        className="rounded-full p-2 text-rose transition-colors hover:bg-rose-light"
+                      >
+                        <Heart className="h-5 w-5 fill-rose" />
+                      </button>
+                    </div>
+                  ))}
+                  </>
                 )}
               </div>
             </SheetContent>
