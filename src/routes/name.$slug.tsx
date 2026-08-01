@@ -17,10 +17,6 @@ function str(v: unknown) {
   return typeof v === "string" ? v : "";
 }
 
-export function slugifyName(name: string, id: string) {
-  return `${name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${id}`;
-}
-
 function findBySlug(slug: string): BabyName | null {
   const id = slug.split("-").pop() ?? "";
   const byId = nameData.find((n) => n.id === id);
